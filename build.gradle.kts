@@ -18,6 +18,7 @@ val crabzillaVersion = "v0.1.6"
 val kotlinSerializationVersion = "1.2.1"
 
 repositories {
+    maven("https://jitpack.io" )
     mavenLocal()
     mavenCentral()
 }
@@ -48,8 +49,8 @@ dependencies {
 
     implementation("io.nats:java-nats-streaming:$natsStreamingVersion")
 
-    implementation("io.github.crabzilla:crabzilla-core:$crabzillaVersion")
-    implementation("io.github.crabzilla:crabzilla-pg-client:$crabzillaVersion")
+    implementation("io.github.crabzilla.crabzilla:crabzilla-core:$crabzillaVersion")
+    implementation("io.github.crabzilla.crabzilla:crabzilla-pg-client:$crabzillaVersion")
 
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-core:$vertxVersion")
