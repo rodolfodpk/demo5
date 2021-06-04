@@ -19,7 +19,7 @@ class NatsProjectorVerticle(private val nats: StreamingConnection) : AbstractVer
     companion object {
         private val log = LoggerFactory.getLogger(NatsProjectorVerticle::class.java)
         const val ENDPOINT = "nats.projection"
-        private const val targetTopic = "iupp.identity.user"
+        private const val targetTopic = "identity.user"
     }
 
     override fun start() {

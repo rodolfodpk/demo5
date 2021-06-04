@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: iuup-identity-demo5
+    name: identity-demo5
   server:
     port: 8081
     context-path: /identity
@@ -23,16 +23,16 @@ vertx:
       database: example1
       user: user1
       password: password1
-      maxSize: 5
+      maxSize: 32
 
 nats:
-  user: iupp-user
-  password: iupp-pass
-  #  host: iuup-nats-streaming
+  user: user
+  password: pass
+  #  host: nats-streaming
   host: localhost
   port: 14222
-  cluster-id: iupp-nats-streaming
-  client-id: iupp-identity-demo
+  cluster-id: nats-streaming
+  client-id: identity-demo
 
 cassandra:
   default:
@@ -40,7 +40,7 @@ cassandra:
       contact-points:
         #  - identity-scylladb:9042
         - localhost:9042
-      session-keyspace: iupp_identity_demo
+      session-keyspace: identity_demo
       load-balancing-policy:
         local-datacenter: datacenter1
 

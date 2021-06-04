@@ -22,7 +22,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Context
-class UserProjectorVerticle(@Named("postgres") private val repo: UserWriteDao) : AbstractVerticle() {
+class UserProjectorVerticle(@Named("scylla") private val repo: UserWriteDao) : AbstractVerticle() {
 
     companion object {
         private val log = LoggerFactory.getLogger(UserProjectorVerticle::class.java)
@@ -63,7 +63,7 @@ class UserProjectorVerticle(@Named("postgres") private val repo: UserWriteDao) :
     @Singleton
     @Named("scylla")
     class ScyllaUserWriteDao(private val cassandra: CassandraClient, config: CassandraConfig) : UserWriteDao {
-        // select count(*) from iupp_identity_demo.users_view;
+        // select count(*) from identity_demo.users_view;
         private val upsert = "INSERT INTO ${config.keyspace}.users_view (id, name, email, password) values (?, ?, ?, ?)"
         private val updateStatus = "UPDATE ${config.keyspace}.users_view set is_active = ? where id = ?"
         override fun upsert(id: UUID, name: String, email: String, password: String): Future<Void> {
