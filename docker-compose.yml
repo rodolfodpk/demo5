@@ -15,8 +15,8 @@ services:
       - "--pass=pass"
       - "--store=file"
       - "--dir=datastore"
-    volumes:
-      - nats:/datastore
+#    volumes:
+#      - nats:/datastore
     restart: unless-stopped
 
   postgress:
