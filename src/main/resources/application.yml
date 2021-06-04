@@ -1,12 +1,53 @@
 micronaut:
   application:
-    name: demo5
+    name: iuup-identity-demo5
+  server:
+    port: 8081
+    context-path: /identity
+
+endpoints:
+  routes:
+    enabled: true
+    sensitive: false
+    details-visible: ANONYMOUS
+  health:
+    enabled: true
+    sensitive: false
+    details-visible: ANONYMOUS
+
 vertx:
   pg:
     client:
       port: 5432
-      host: the-host
-      database: the-db
-      user: user
-      password: password
+      host: localhost
+      database: example1
+      user: user1
+      password: password1
       maxSize: 5
+
+nats:
+  user: iupp-user
+  password: iupp-pass
+  #  host: iuup-nats-streaming
+  host: localhost
+  port: 14222
+  cluster-id: iupp-nats-streaming
+  client-id: iupp-identity-demo
+
+cassandra:
+  default:
+    basic:
+      contact-points:
+        #  - identity-scylladb:9042
+        - localhost:9042
+      session-keyspace: iupp_identity_demo
+      load-balancing-policy:
+        local-datacenter: datacenter1
+
+jackson:
+  time-zone: America/Sao_Paulo
+  serialization:
+    indentOutput: true
+    writeDatesAsTimestamps: false
+
+token.hmac.secret: 80a668f0947c520001532db1fcd201748948d61520131750b8389c477a25cf9f
