@@ -45,6 +45,7 @@ open class UsersController(private val controller: CommandController<User, UserC
             controller.handle(metadata, command)
                 .onSuccess { session: StatefulSession<User, UserEvent> ->
                     // if (log.isDebugEnabled) log.debug("Result: ${session.toSessionData()}")
+                    // log.info("Result: ${session.toSessionData()}")
                     emitter.onSuccess(session.toSessionData())
                 }
                 .onFailure { error ->

@@ -33,21 +33,21 @@ services:
       - "5432:5432"
     restart: unless-stopped
 
-  scyllasb:
-    image: scylladb/scylla:latest
-#    container_name: scylladb
-    expose:
-      - "9042"
-      - "9142"
-    ports:
-      - "9042:9042"
-      - "9142:9142"
-      - "9160:9160"
-      - "10000:10000"
-    volumes:
-      - scylla:/var/lib/scylla
-    command: "--smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0"
-    restart: unless-stopped
+#  scyllasb:
+#    image: scylladb/scylla:latest
+##    container_name: scylladb
+#    expose:
+#      - "9042"
+#      - "9142"
+#    ports:
+#      - "9042:9042"
+#      - "9142:9142"
+#      - "9160:9160"
+#      - "10000:10000"
+#    volumes:
+#      - scylla:/var/lib/scylla
+#    command: "--smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0"
+#    restart: unless-stopped
 
 volumes:
   nats:

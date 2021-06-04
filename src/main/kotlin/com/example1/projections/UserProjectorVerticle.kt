@@ -1,7 +1,5 @@
 package com.example1
 
-import com.datastax.oss.driver.api.core.cql.PreparedStatement
-import com.example1.infra.CassandraConfig
 import com.example1.user.UserEvent
 import com.example1.user.UserEvent.UserActivated
 import com.example1.user.UserEvent.UserDeactivated
@@ -9,10 +7,8 @@ import com.example1.user.UserEvent.UserRegistered
 import com.example1.user.userJson
 import io.github.crabzilla.core.DomainEvent
 import io.micronaut.context.annotation.Context
-import io.vertx.cassandra.CassandraClient
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
-import io.vertx.core.Promise
 import io.vertx.core.json.JsonObject
 import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.Tuple
@@ -22,7 +18,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Context
-class UserProjectorVerticle(@Named("scylla") private val repo: UserWriteDao) : AbstractVerticle() {
+class UserProjectorVerticle(@Named("postgres") private val repo: UserWriteDao) : AbstractVerticle() {
 
     companion object {
         private val log = LoggerFactory.getLogger(UserProjectorVerticle::class.java)
@@ -60,33 +56,33 @@ class UserProjectorVerticle(@Named("scylla") private val repo: UserWriteDao) : A
         fun updateStatus(id: UUID, isActive: Boolean): Future<Void>
     }
 
-    @Singleton
-    @Named("scylla")
-    class ScyllaUserWriteDao(private val cassandra: CassandraClient, config: CassandraConfig) : UserWriteDao {
-        // select count(*) from identity_demo.users_view;
-        private val upsert = "INSERT INTO ${config.keyspace}.users_view (id, name, email, password) values (?, ?, ?, ?)"
-        private val updateStatus = "UPDATE ${config.keyspace}.users_view set is_active = ? where id = ?"
-        override fun upsert(id: UUID, name: String, email: String, password: String): Future<Void> {
-            val promise = Promise.promise<Void>()
-            cassandra.prepare(upsert)
-                .compose { ps: PreparedStatement -> cassandra.execute(ps.bind(id, name, email, password)) }
-                .onSuccess { rs ->
-                    if (rs.wasApplied() && rs.remaining() != 1) {
-                        promise.complete()
-                    } else {
-                       promise.fail("not applied")
-                    }
-                }
-                .onFailure { promise.fail(it) }
-          return promise.future()
-        }
-
-        override fun updateStatus(id: UUID, isActive: Boolean): Future<Void> {
-            return cassandra.prepare(updateStatus)
-                .compose { ps: PreparedStatement -> cassandra.execute(ps.bind(isActive, id)) }
-                .mapEmpty()
-        }
-    }
+//    @Singleton
+//    @Named("scylla")
+//    class ScyllaUserWriteDao(private val cassandra: CassandraClient, config: CassandraConfig) : UserWriteDao {
+//        // select count(*) from identity_demo.users_view;
+//        private val upsert = "INSERT INTO ${config.keyspace}.users_view (id, name, email, password) values (?, ?, ?, ?)"
+//        private val updateStatus = "UPDATE ${config.keyspace}.users_view set is_active = ? where id = ?"
+//        override fun upsert(id: UUID, name: String, email: String, password: String): Future<Void> {
+//            val promise = Promise.promise<Void>()
+//            cassandra.prepare(upsert)
+//                .compose { ps: PreparedStatement -> cassandra.execute(ps.bind(id, name, email, password)) }
+//                .onSuccess { rs ->
+//                    if (rs.wasApplied() && rs.remaining() != 1) {
+//                        promise.complete()
+//                    } else {
+//                       promise.fail("not applied")
+//                    }
+//                }
+//                .onFailure { promise.fail(it) }
+//          return promise.future()
+//        }
+//
+//        override fun updateStatus(id: UUID, isActive: Boolean): Future<Void> {
+//            return cassandra.prepare(updateStatus)
+//                .compose { ps: PreparedStatement -> cassandra.execute(ps.bind(isActive, id)) }
+//                .mapEmpty()
+//        }
+//    }
 
     @Singleton
     @Named("postgres")
