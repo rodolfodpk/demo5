@@ -38,11 +38,15 @@ open class UsersController(private val controller: CommandController<User, UserC
     @Post
     open fun post(@Valid @Body request: CreateUserRequest): Single<StatefulSession.SessionData> {
         val newId = UUID.randomUUID()
-        if (log.isDebugEnabled) log.debug("*** Will generate a new command $newId")
+        // if (log.isDebugEnabled) log.debug("*** Will generate a new command $newId")
         val metadata = CommandMetadata(AggregateRootId(newId))
         val command = RegisterUser(newId, request.name, request.email, request.password)
         return Single.create { emitter ->
             controller.handle(metadata, command)
+                .onSuccess { session: StatefulSession<User, UserEvent> ->
+                    // if (log.isDebugEnabled) log.debug("Result: ${session.toSessionData()}")
+                    emitter.onSuccess(session.toSessionData())
+                }
                 .onFailure { error ->
                     val result = when (error) {
                         is UserAlreadyExists ->
@@ -55,10 +59,6 @@ open class UsersController(private val controller: CommandController<User, UserC
                     }
                     log.error("Error", result)
                     emitter.onError(result)
-                }
-                .onSuccess { session: StatefulSession<User, UserEvent> ->
-                    if (log.isDebugEnabled) log.debug("Result: ${session.toSessionData()}")
-                    emitter.onSuccess(session.toSessionData())
                 }
         }
     }
