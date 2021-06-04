@@ -83,7 +83,7 @@ CREATE INDEX idx_email ON users_view (email);
 --# Data Storage: ssd
 
 ALTER SYSTEM SET
- max_connections = '32';
+ max_connections = '35';
 ALTER SYSTEM SET
  shared_buffers = '2GB';
 ALTER SYSTEM SET
