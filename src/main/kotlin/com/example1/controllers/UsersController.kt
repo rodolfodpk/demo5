@@ -12,6 +12,7 @@ import io.github.crabzilla.stack.CommandException
 import io.github.crabzilla.stack.CommandMetadata
 import io.micronaut.context.annotation.Context
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
@@ -36,17 +37,15 @@ open class UsersController(private val controller: CommandController<User, UserC
 
     @Status(HttpStatus.CREATED)
     @Post
-    open fun post(@Valid @Body request: CreateUserRequest): Single<StatefulSession.SessionData> {
+    open fun post(@Valid @Body request: CreateUserRequest): Single<HttpResponse<String>> {
         val newId = UUID.randomUUID()
-        // if (log.isDebugEnabled) log.debug("*** Will generate a new command $newId")
         val metadata = CommandMetadata(AggregateRootId(newId))
         val command = RegisterUser(newId, request.name, request.email, request.password)
         return Single.create { emitter ->
             controller.handle(metadata, command)
                 .onSuccess { session: StatefulSession<User, UserEvent> ->
-                    // if (log.isDebugEnabled) log.debug("Result: ${session.toSessionData()}")
-                    emitter.onSuccess(session.toSessionData())
-                }
+                    if (log.isDebugEnabled) log.debug("Result: ${session.toSessionData()}")
+                    emitter.onSuccess(HttpResponse.noContent())                }
                 .onFailure { error ->
                     val result = when (error) {
                         is UserAlreadyExists ->
