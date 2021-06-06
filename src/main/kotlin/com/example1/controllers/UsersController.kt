@@ -1,10 +1,10 @@
 package com.example1.controllers
 
-import com.example1.user.User
-import com.example1.user.UserAlreadyExists
-import com.example1.user.UserCommand
-import com.example1.user.UserCommand.RegisterUser
-import com.example1.user.UserEvent
+import com.example1.User
+import com.example1.UserAlreadyExists
+import com.example1.UserCommand
+import com.example1.UserCommand.RegisterUser
+import com.example1.UserEvent
 import io.github.crabzilla.core.StatefulSession
 import io.github.crabzilla.stack.AggregateRootId
 import io.github.crabzilla.stack.CommandController

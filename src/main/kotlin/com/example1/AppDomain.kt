@@ -1,11 +1,11 @@
-package com.example1.user
+package com.example1
 
-import com.example1.user.UserCommand.ActivateUser
-import com.example1.user.UserCommand.DeactivateUser
-import com.example1.user.UserCommand.RegisterUser
-import com.example1.user.UserEvent.UserActivated
-import com.example1.user.UserEvent.UserDeactivated
-import com.example1.user.UserEvent.UserRegistered
+import com.example1.UserCommand.ActivateUser
+import com.example1.UserCommand.DeactivateUser
+import com.example1.UserCommand.RegisterUser
+import com.example1.UserEvent.UserActivated
+import com.example1.UserEvent.UserDeactivated
+import com.example1.UserEvent.UserRegistered
 import io.github.crabzilla.core.AggregateRoot
 import io.github.crabzilla.core.AggregateRootConfig
 import io.github.crabzilla.core.AggregateRootName
@@ -106,8 +106,7 @@ val userCmdValidator = CommandValidator<UserCommand> { command ->
  */
 val userEventHandler = EventHandler<User, UserEvent> { state, event ->
   when (event) {
-    is UserRegistered -> User
-      .create(id = event.id, name = event.name, email = event.email, password = event.password).state
+    is UserRegistered -> User.create(id = event.id, name = event.name, email = event.email, password = event.password).state
     is UserActivated -> state!!.copy(isActive = true, reason = event.reason)
     is UserDeactivated -> state!!.copy(isActive = false, reason = event.reason)
   }
@@ -129,8 +128,10 @@ object UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
 
       is RegisterUser -> {
         if (snapshot == null)
-          with(User
-            .create(id = command.userId, name = command.name, email = command.email, password = command.password),
+          with(User.create(id = command.userId,
+            name = command.name,
+            email = command.email,
+            password = command.password),
             userEventHandler)
         else throw UserAlreadyExists(command.userId)
       }

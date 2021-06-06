@@ -1,9 +1,5 @@
 package com.example1
 
-import com.example1.user.User
-import com.example1.user.UserCommand
-import com.example1.user.UserEvent
-import com.example1.user.userConfig
 import io.github.crabzilla.pgc.CommandControllerFactory
 import io.github.crabzilla.pgc.EventsPublisherVerticleFactory
 import io.github.crabzilla.stack.CommandController

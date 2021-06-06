@@ -2,11 +2,9 @@ package com.example1
 
 import com.datastax.oss.driver.api.core.cql.PreparedStatement
 import com.example1.infra.CassandraConfig
-import com.example1.user.UserEvent
-import com.example1.user.UserEvent.UserActivated
-import com.example1.user.UserEvent.UserDeactivated
-import com.example1.user.UserEvent.UserRegistered
-import com.example1.user.userJson
+import com.example1.UserEvent.UserActivated
+import com.example1.UserEvent.UserDeactivated
+import com.example1.UserEvent.UserRegistered
 import io.github.crabzilla.core.DomainEvent
 import io.micronaut.context.annotation.Context
 import io.vertx.cassandra.CassandraClient
