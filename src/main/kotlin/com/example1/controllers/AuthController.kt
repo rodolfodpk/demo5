@@ -25,7 +25,7 @@ import javax.inject.Singleton
 
 @Controller("/api/v1/auth")
 @Context
-open class AuthController(@Named("scylla") private val dao: UserReadDao, private val jwt: JWTAuth) {
+open class AuthController(@Named("postgres") private val dao: UserReadDao, private val jwt: JWTAuth) {
 
     companion object {
         private val log = LoggerFactory.getLogger(AuthController::class.java)

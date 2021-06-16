@@ -20,7 +20,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Context
-class UserProjectorVerticle(@Named("scylla") private val repo: UserWriteDao) : AbstractVerticle() {
+class UserProjectorVerticle(@Named("postgres") private val repo: UserWriteDao) : AbstractVerticle() {
 
     companion object {
         private val log = LoggerFactory.getLogger(UserProjectorVerticle::class.java)

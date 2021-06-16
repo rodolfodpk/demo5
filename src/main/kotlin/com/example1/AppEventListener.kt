@@ -38,21 +38,21 @@ class AppEventListener {
     @Named("pgPool")
     lateinit var pgPool: PgPool
 
-    @Inject
-    lateinit var cassandra : CassandraClient
-    @Inject
-    lateinit var cassandraConfig : CassandraConfig
+//    @Inject
+//    lateinit var cassandra : CassandraClient
+//    @Inject
+//    lateinit var cassandraConfig : CassandraConfig
 
     @EventListener
     internal fun onStartupEvent(event: StartupEvent) {
         vertx.registerLocalCodec()
         val deploymentOptions = DeploymentOptions().setHa(false).setInstances(1)
-        val ddls = ddls()
-        cassandra
-            .execute(ddls[0])
-            .compose { cassandra.execute(ddls[1]) }
-            .onFailure { log.error("Creating tables", it) }
-            .onSuccess {
+//        val ddls = ddls()
+//        cassandra
+//            .execute(ddls[0])
+//            .compose { cassandra.execute(ddls[1]) }
+//            .onFailure { log.error("Creating tables", it) }
+//            .onSuccess {
                 log.info("Scylla tables successfully created")
                 vertx.deployVerticle(usersProjectionVerticle, deploymentOptions)
                     .compose { vertx.deployVerticle(userProjectorVerticle, deploymentOptions) }
@@ -60,22 +60,22 @@ class AppEventListener {
 //                    .compose { vertx.deployVerticle(natsProjectorVerticle, deploymentOptions) }
                     .onSuccess { log.info("Successfully started $it") }
                     .onFailure { log.error("When starting", it) }
-            }
+//            }
     }
 
     @EventListener
     internal fun onShutdownEvent(event: ShutdownEvent) {
         vertx.close()
         pgPool.close()
-        cassandra.close()
+//        cassandra.close()
     }
 
-    @Inject
-    fun ddls(): List<String> {
-        val c1 = """CREATE KEYSPACE IF NOT EXISTS ${cassandraConfig.keyspace} WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }""".trim()
-        val c2 = """CREATE TABLE IF NOT EXISTS ${cassandraConfig.keyspace}.users_view (id UUID, name VARCHAR, email VARCHAR, password VARCHAR, is_active BOOLEAN, PRIMARY KEY (email));""".trim()
-        //   val c3 = """CREATE INDEX user_password ON ${cassandraConfig.keyspace}.users_view (email);""".trim()
-        return listOf(c1, c2)
-    }
+//    @Inject
+//    fun ddls(): List<String> {
+//        val c1 = """CREATE KEYSPACE IF NOT EXISTS ${cassandraConfig.keyspace} WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }""".trim()
+//        val c2 = """CREATE TABLE IF NOT EXISTS ${cassandraConfig.keyspace}.users_view (id UUID, name VARCHAR, email VARCHAR, password VARCHAR, is_active BOOLEAN, PRIMARY KEY (email));""".trim()
+//        //   val c3 = """CREATE INDEX user_password ON ${cassandraConfig.keyspace}.users_view (email);""".trim()
+//        return listOf(c1, c2)
+//    }
 
 }
