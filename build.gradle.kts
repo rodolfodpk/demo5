@@ -14,13 +14,13 @@ group = "com.example1"
 val kotlinVersion = project.properties.get("kotlinVersion")
 val natsStreamingVersion = "2.2.3"
 val vertxVersion = "4.1.0"
-val crabzillaVersion = "v0.1.6"
+val crabzillaVersion = "v0.1.7"
 val kotlinSerializationVersion = "1.2.1"
 
 repositories {
-    maven("https://jitpack.io" )
     mavenLocal()
     mavenCentral()
+    maven("https://jitpack.io" )
 }
 
 micronaut {
@@ -51,6 +51,9 @@ dependencies {
 
     implementation("io.github.crabzilla.crabzilla:crabzilla-core:$crabzillaVersion")
     implementation("io.github.crabzilla.crabzilla:crabzilla-pg-client:$crabzillaVersion")
+
+//    implementation("io.github.crabzilla:crabzilla-core:$crabzillaVersion")
+//    implementation("io.github.crabzilla:crabzilla-pg-client:$crabzillaVersion")
 
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-core:$vertxVersion")

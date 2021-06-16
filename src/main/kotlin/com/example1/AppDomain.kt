@@ -8,7 +8,6 @@ import com.example1.UserEvent.UserDeactivated
 import com.example1.UserEvent.UserRegistered
 import io.github.crabzilla.core.AggregateRoot
 import io.github.crabzilla.core.AggregateRootConfig
-import io.github.crabzilla.core.AggregateRootName
 import io.github.crabzilla.core.Command
 import io.github.crabzilla.core.CommandHandler
 import io.github.crabzilla.core.CommandHandler.ConstructorResult
@@ -16,7 +15,6 @@ import io.github.crabzilla.core.CommandValidator
 import io.github.crabzilla.core.DomainEvent
 import io.github.crabzilla.core.EventHandler
 import io.github.crabzilla.core.Snapshot
-import io.github.crabzilla.core.SnapshotTableName
 import io.github.crabzilla.core.StatefulSession
 import io.github.crabzilla.core.javaModule
 import kotlinx.serialization.Contextual
@@ -168,8 +166,7 @@ val userModule = SerializersModule {
 val userJson = Json { serializersModule = userModule }
 
 val userConfig = AggregateRootConfig(
-  AggregateRootName("User"),
-  SnapshotTableName("user_snapshots"),
+  "User",
   userEventHandler,
   userCmdValidator,
   UserCommandHandler,

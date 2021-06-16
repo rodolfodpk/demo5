@@ -33,7 +33,7 @@ private class AppFactory {
     @Named("postgress")
     fun pgUserCommandController(@Named("pgPool") pgPool: PgPool):
             CommandController<User, UserCommand, UserEvent> {
-        return CommandControllerFactory.create(userConfig, pgPool)
+        return CommandControllerFactory.create(userConfig, pgPool, false)
     }
 
     @Singleton
