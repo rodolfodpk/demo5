@@ -1,15 +1,12 @@
 package com.example1
 
-import io.github.crabzilla.pgc.CommandControllerFactory
-import io.github.crabzilla.pgc.EventsPublisherVerticleFactory
+import io.github.crabzilla.pgc.PgcClient
 import io.github.crabzilla.stack.CommandController
+import io.github.crabzilla.stack.EventsPublisherOptions
 import io.github.crabzilla.stack.EventsPublisherVerticle
-import io.github.crabzilla.stack.EventsPublisherVerticleOptions
-import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Value
 import io.vertx.core.Vertx
-import io.vertx.core.eventbus.EventBus
 import io.vertx.ext.auth.PubSecKeyOptions
 import io.vertx.ext.auth.jwt.JWTAuth
 import io.vertx.ext.auth.jwt.JWTAuthOptions
@@ -28,32 +25,32 @@ private class AppFactory {
         return JWTAuth.create(vertx, JWTAuthOptions().addPubSecKey(opt))
     }
 
-    @Bean
     @Singleton
-    @Named("postgress")
-    fun pgUserCommandController(@Named("pgPool") pgPool: PgPool):
-            CommandController<User, UserCommand, UserEvent> {
-        return CommandControllerFactory.create(userConfig, pgPool, false)
+    fun pgcClient(vertx: Vertx, @Named("pgPool") pgPool: PgPool): PgcClient {
+        return PgcClient(vertx, pgPool, userJson)
+    }
+
+    @Singleton
+    fun c1(pgcClient: PgcClient): CommandController<User, UserCommand, UserEvent> {
+        return pgcClient.create(userConfig, false)
     }
 
     @Singleton
     @Named("users")
-    fun publisherVerticle1(eventBus: EventBus, @Named("pgPool") pgPool: PgPool): EventsPublisherVerticle {
-        val options = EventsPublisherVerticleOptions.Builder()
+    fun publisherVerticle1(pgcClient: PgcClient): EventsPublisherVerticle {
+        val options = EventsPublisherOptions.Builder()
             .targetEndpoint(UserProjectorVerticle.ENDPOINT)
-            .eventBus(eventBus)
             .build()
-        return EventsPublisherVerticleFactory.create("users", pgPool, options)
+        return pgcClient.create("users", options)
     }
 
     @Singleton
     @Named("nats")
-    fun publisherVerticle2(eventBus: EventBus, @Named("pgPool") pgPool: PgPool): EventsPublisherVerticle {
-        val options = EventsPublisherVerticleOptions.Builder()
+    fun publisherVerticle2(pgcClient: PgcClient): EventsPublisherVerticle {
+        val options = EventsPublisherOptions.Builder()
             .targetEndpoint(NatsProjectorVerticle.ENDPOINT)
-            .eventBus(eventBus)
             .build()
-        return EventsPublisherVerticleFactory.create("nats", pgPool, options)
+        return pgcClient.create("nats", options)
     }
 
 }

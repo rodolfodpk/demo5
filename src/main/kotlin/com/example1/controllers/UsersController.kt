@@ -26,6 +26,9 @@ import javax.validation.Valid
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
+import com.github.f4b6a3.uuid.UuidCreator
+import io.github.crabzilla.stack.CommandId
+
 
 @Controller("/api/v1/users")
 @Context
@@ -38,8 +41,8 @@ open class UsersController(private val controller: CommandController<User, UserC
     @Status(HttpStatus.CREATED)
     @Post
     open fun post(@Valid @Body request: CreateUserRequest): Single<HttpResponse<String>> {
-        val newId = UUID.randomUUID()
-        val metadata = CommandMetadata(AggregateRootId(newId))
+        val newId = UuidCreator.getTimeOrdered()
+        val metadata = CommandMetadata(AggregateRootId(newId), CommandId(UuidCreator.getTimeOrdered()))
         val command = RegisterUser(newId, request.name, request.email, request.password)
         return Single.create { emitter ->
             controller.handle(metadata, command)
@@ -50,7 +53,7 @@ open class UsersController(private val controller: CommandController<User, UserC
                     val result = when (error) {
                         is UserAlreadyExists ->
                             throw HttpStatusException(HttpStatus.CONFLICT, error.message)
-                        is CommandException.WriteConcurrencyException ->
+                        is CommandException.OptimisticLockingException ->
                             throw HttpStatusException(HttpStatus.CONFLICT, error.message)
                         is CommandException.ValidationException ->
                             throw HttpStatusException(HttpStatus.BAD_REQUEST, error.message)
@@ -74,6 +77,6 @@ data class CreateUserRequest(
     val email: String = "",
 
     @field:[NotEmpty Size(max = 10)]
-    val password: String = ""
+    val password: String = "",
 
-)
+    )
