@@ -53,13 +53,13 @@ class AppEventListener {
 //            .compose { cassandra.execute(ddls[1]) }
 //            .onFailure { log.error("Creating tables", it) }
 //            .onSuccess {
-                log.info("Scylla tables successfully created")
-                vertx.deployVerticle(usersProjectionVerticle, deploymentOptions)
-                    .compose { vertx.deployVerticle(userProjectorVerticle, deploymentOptions) }
+//                log.info("Scylla tables successfully created")
+//                vertx.deployVerticle(usersProjectionVerticle, deploymentOptions)
+//                    .compose { vertx.deployVerticle(userProjectorVerticle, deploymentOptions) }
 //                    .compose { vertx.deployVerticle(natsProjectionVerticle, deploymentOptions) }
 //                    .compose { vertx.deployVerticle(natsProjectorVerticle, deploymentOptions) }
-                    .onSuccess { log.info("Successfully started $it") }
-                    .onFailure { log.error("When starting", it) }
+//                    .onSuccess { log.info("Successfully started $it") }
+//                    .onFailure { log.error("When starting", it) }
 //            }
     }
 
