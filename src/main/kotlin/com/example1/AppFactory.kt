@@ -1,5 +1,7 @@
 package com.example1
 
+import com.example1.projections.NatsProjectorVerticle
+import com.example1.projections.UserProjectorVerticle
 import io.github.crabzilla.pgc.PgcClient
 import io.github.crabzilla.stack.CommandController
 import io.github.crabzilla.stack.EventsPublisherOptions

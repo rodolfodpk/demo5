@@ -1,4 +1,4 @@
-package com.example1
+package com.example1.projections
 
 
 import io.nats.streaming.StreamingConnection

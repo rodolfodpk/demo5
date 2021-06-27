@@ -1,13 +1,13 @@
 package com.example1
 
-import com.example1.infra.CassandraConfig
 import com.example1.infra.registerLocalCodec
+import com.example1.projections.NatsProjectorVerticle
+import com.example1.projections.UserProjectorVerticle
 import io.github.crabzilla.stack.EventsPublisherVerticle
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ShutdownEvent
 import io.micronaut.context.event.StartupEvent
 import io.micronaut.runtime.event.annotation.EventListener
-import io.vertx.cassandra.CassandraClient
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.pgclient.PgPool
