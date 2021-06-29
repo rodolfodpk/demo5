@@ -1,7 +1,5 @@
 package com.example1.controllers
 
-import com.datastax.oss.driver.api.core.cql.PreparedStatement
-import com.example1.infra.CassandraConfig
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -12,7 +10,6 @@ import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Status
 import io.micronaut.http.exceptions.HttpStatusException
 import io.reactivex.Single
-import io.vertx.cassandra.CassandraClient
 import io.vertx.core.Future
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.auth.JWTOptions
@@ -20,12 +17,11 @@ import io.vertx.ext.auth.jwt.JWTAuth
 import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.Tuple
 import org.slf4j.LoggerFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Controller("/api/v1/auth")
 @Context
-open class AuthController(@Named("postgres") private val dao: UserReadDao, private val jwt: JWTAuth) {
+open class AuthController(private val dao: UserReadDao, private val jwt: JWTAuth) {
 
     companion object {
         private val log = LoggerFactory.getLogger(AuthController::class.java)
@@ -39,7 +35,8 @@ open class AuthController(@Named("postgres") private val dao: UserReadDao, priva
             dao.select(email, password)
                 .onFailure {
                     log.error("Error", it)
-                    emitter.onError(it) }
+                    emitter.onError(it)
+                }
                 .onSuccess { found ->
                     log.info("Found: {}", found)
                     if (found) {
@@ -57,27 +54,9 @@ open class AuthController(@Named("postgres") private val dao: UserReadDao, priva
 
 }
 
-interface UserReadDao {
-    fun select(email: String, password: String): Future<Boolean>
-}
-
 @Singleton
-@Named("scylla")
-class ScyllaUserReadDao(private val cassandra: CassandraClient, config: CassandraConfig) : UserReadDao {
-    private val select = "SELECT password FROM ${config.keyspace}.users_view WHERE email = ?"
-    override fun select(email: String, password: String): Future<Boolean> {
-        return cassandra.prepare(select)
-            .compose { ps: PreparedStatement -> cassandra.execute(ps.bind(email)) }
-            .map { rs ->
-                rs.one()?.getString("password") ?:
-                        rs.one()?.getString("password") == password}
-    }
-}
-
-@Singleton
-@Named("postgres")
-class PostgressUserReadDao(private val pool: PgPool) : UserReadDao {
-    override fun select(email: String, password: String): Future<Boolean> {
+class UserReadDao(private val pool: PgPool) {
+    fun select(email: String, password: String): Future<Boolean> {
         return pool.preparedQuery("SELECT password FROM users_view WHERE email = $1")
             .execute(Tuple.of(email))
             .map { rs -> if (rs.size() == 0) false else rs.first().getString("password") == password }

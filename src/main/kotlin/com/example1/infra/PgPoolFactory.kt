@@ -6,28 +6,31 @@ import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Value
 import io.vertx.core.Vertx
 import io.vertx.pgclient.PgConnectOptions
-import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.PoolOptions
-import javax.inject.Named
 
 @Factory
 class PgPoolFactory {
 
     @Context
-    @Named("pgPool")
-    fun pgPool(vertx: Vertx, config: WriteDbConfig): PgPool {
-        val options = PgConnectOptions()
+    fun poolOptions(vertx: Vertx, config: WriteDbConfig): PoolOptions {
+        return PoolOptions()
+            .setMaxSize(config.maxSize)
+//            .setMaxWaitQueueSize(-1)
+//            .setIdleTimeout(2)
+//            .setIdleTimeoutUnit(TimeUnit.SECONDS)
+    }
+
+    @Context
+    fun pgConnectOptions(vertx: Vertx, config: WriteDbConfig): PgConnectOptions {
+        return PgConnectOptions()
             .setPort(config.port)
             .setHost(config.host)
             .setDatabase(config.database)
             .setUser(config.user)
             .setPassword(config.password)
-        val pgPoolOptions = PoolOptions()
-            .setMaxSize(config.maxSize)
-//            .setMaxWaitQueueSize(-1)
-//            .setIdleTimeout(2)
-//            .setIdleTimeoutUnit(TimeUnit.SECONDS)
-        return PgPool.pool(vertx, options, pgPoolOptions)
+            .setCachePreparedStatements(true)
+            .setReconnectAttempts(2)
+            .setReconnectInterval(1000)
     }
 
     @ConfigurationProperties("vertx.pg.client")

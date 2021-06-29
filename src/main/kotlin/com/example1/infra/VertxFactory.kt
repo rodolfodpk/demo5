@@ -5,6 +5,7 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Factory
 import io.vertx.core.Vertx
 import io.vertx.core.eventbus.EventBus
+import io.vertx.core.VertxOptions
 
 @Factory
 class VertxFactory {
@@ -12,7 +13,7 @@ class VertxFactory {
     @Bean
     @Context
     fun vertx(): Vertx {
-        return Vertx.vertx()
+        return Vertx.vertx(VertxOptions().setPreferNativeTransport(true))
     }
 
     @Bean

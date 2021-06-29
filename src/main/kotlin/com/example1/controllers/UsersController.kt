@@ -28,11 +28,12 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
 import com.github.f4b6a3.uuid.UuidCreator
 import io.github.crabzilla.stack.CommandId
+import javax.inject.Named
 
 
 @Controller("/api/v1/users")
 @Context
-open class UsersController(private val controller: CommandController<User, UserCommand, UserEvent>) {
+open class UsersController(@Named("sync") private val controller: CommandController<User, UserCommand, UserEvent>) {
 
     companion object {
         private val log = LoggerFactory.getLogger(UsersController::class.java)

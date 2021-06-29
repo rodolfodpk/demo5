@@ -49,16 +49,16 @@ dependencies {
 
     implementation("io.nats:java-nats-streaming:$natsStreamingVersion")
 
-//    implementation("io.github.crabzilla.crabzilla:crabzilla-core:$crabzillaVersion")
-//    implementation("io.github.crabzilla.crabzilla:crabzilla-pg-client:$crabzillaVersion")
+    implementation("io.github.crabzilla.crabzilla:crabzilla-core:$crabzillaVersion")
+    implementation("io.github.crabzilla.crabzilla:crabzilla-pg-client:$crabzillaVersion")
 
-    implementation("io.github.crabzilla:crabzilla-core:$crabzillaVersion")
-    implementation("io.github.crabzilla:crabzilla-pg-client:$crabzillaVersion")
+//    implementation("io.github.crabzilla:crabzilla-core:$crabzillaVersion")
+//    implementation("io.github.crabzilla:crabzilla-pg-client:$crabzillaVersion")
 
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-core:$vertxVersion")
     implementation("io.vertx:vertx-pg-client:$vertxVersion")
-    implementation("io.vertx:vertx-cassandra-client:$vertxVersion")
+//    implementation("io.vertx:vertx-cassandra-client:$vertxVersion")
     implementation("io.vertx:vertx-auth-jwt:$vertxVersion")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
@@ -66,7 +66,7 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("com.github.f4b6a3:uuid-creator:3.7.2")
-
+    implementation("io.netty:netty-transport-native-epoll:4.0.28.Final")
 }
 
 

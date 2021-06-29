@@ -19,7 +19,6 @@ class NatsProjectorVerticle(private val nats: StreamingConnection) : AbstractVer
     companion object {
         private val log = LoggerFactory.getLogger(NatsProjectorVerticle::class.java)
         const val ENDPOINT = "nats.projection"
-        private const val targetTopic = "identity.user"
     }
 
     override fun start() {
@@ -37,7 +36,7 @@ class NatsProjectorVerticle(private val nats: StreamingConnection) : AbstractVer
 
     private fun project(eventAsJson: JsonObject): Future<Void> {
         return vertx.executeBlocking<Void> { promise -> try {
-            nats.publish(targetTopic, eventAsJson.toBuffer().bytes)
+            nats.publish(ENDPOINT, eventAsJson.toBuffer().bytes)
             // log.info("Published {} to {}", eventAsJson, targetTopic)
             promise.complete()
         } catch (e: Exception) {

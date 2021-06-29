@@ -120,7 +120,11 @@ class UserAlreadyExists(id: UUID) : IllegalStateException("User $id already exis
  */
 object UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
 
-  override fun handleCommand(command: UserCommand, snapshot: Snapshot<User>?): StatefulSession<User, UserEvent> {
+  override fun handleCommand(
+    command: UserCommand,
+    snapshot: Snapshot<User>?,
+    eventHandler: EventHandler<User, UserEvent>)
+  : StatefulSession<User, UserEvent> {
 
     return when (command) {
 
@@ -141,6 +145,13 @@ object UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
     }
   }
 }
+
+val userConfig = AggregateRootConfig(
+  "User",
+  userEventHandler,
+  userCmdValidator,
+  UserCommandHandler
+)
 
 /**
  * kotlinx.serialization
@@ -164,11 +175,3 @@ val userModule = SerializersModule {
 }
 
 val userJson = Json { serializersModule = userModule }
-
-val userConfig = AggregateRootConfig(
-  "User",
-  userEventHandler,
-  userCmdValidator,
-  UserCommandHandler,
-  userJson
-)
