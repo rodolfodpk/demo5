@@ -1,0 +1,20 @@
+{
+  "main": "io.github.crabzilla.pgc.PgcEventsPublisherVerticle",
+  "options": {
+    "config" : {
+      "connectOptionsName": "db-config",
+      "poolOptions": {
+        "maxSize": 7
+      },
+      "jsonFactoryClassName": "com.example1.AppJsonFactory",
+      "projectionId": "users",
+      "targetEndpoint" : "users-projection",
+      "interval" : 500,
+      "maxNumberOfRows": 500,
+      "maxInterval" : 60000,
+      "statsInterval" : 30000
+    },
+    "worker": false,
+    "instances": 1
+  }
+}

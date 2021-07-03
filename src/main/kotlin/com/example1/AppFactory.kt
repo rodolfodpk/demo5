@@ -1,8 +1,8 @@
 package com.example1
 
 import com.example1.projections.UsersEventsProjector
-import io.github.crabzilla.pgc.api.PgcClient
-import io.github.crabzilla.pgc.api.PgcCommandClient
+import io.github.crabzilla.pgc.PgcCommandControllerClient
+import io.github.crabzilla.pgc.PgcCommandControllerFactory
 import io.github.crabzilla.stack.CommandController
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Value
@@ -28,26 +28,25 @@ private class AppFactory {
     }
 
     @Singleton
-    fun pgcClient(vertx: Vertx, connectOptions: PgConnectOptions, poolOptions: PoolOptions): PgcClient {
-        return PgcClient.create(vertx, userJson, connectOptions, poolOptions)
+    fun pgcClient(vertx: Vertx, connectOptions: PgConnectOptions, poolOptions: PoolOptions)
+    : PgcCommandControllerClient {
+        return PgcCommandControllerClient.create(vertx, userJson, connectOptions, poolOptions)
     }
 
     @Singleton
-    fun pgPool(pgcClient: PgcClient): PgPool {
+    fun pgPool(pgcClient: PgcCommandControllerClient): PgPool {
         return pgcClient.pgPool
     }
 
     @Singleton
     @Named("sync")
-    fun cmdControllerSync(pgcClient: PgcClient): CommandController<User, UserCommand, UserEvent> {
-        val c = PgcCommandClient(pgcClient)
-        return c.create(userConfig, false, UsersEventsProjector)
+    fun cmdControllerSync(pgcClient: PgcCommandControllerClient): CommandController<User, UserCommand, UserEvent> {
+        return PgcCommandControllerFactory(pgcClient).create(userConfig, false, UsersEventsProjector)
     }
 
     @Singleton
     @Named("async")
-    fun cmdControllerAsync(pgcClient: PgcClient): CommandController<User, UserCommand, UserEvent> {
-        val c = PgcCommandClient(pgcClient)
-        return c.create(userConfig, false)
+    fun cmdControllerAsync(pgcClient: PgcCommandControllerClient): CommandController<User, UserCommand, UserEvent> {
+        return PgcCommandControllerFactory(pgcClient).create(userConfig, false)
     }
 }

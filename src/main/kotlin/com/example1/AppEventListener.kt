@@ -1,14 +1,14 @@
 package com.example1
 
-import com.example1.infra.registerLocalCodec
-import com.example1.projections.UsersEventsProjector
-import io.github.crabzilla.pgc.api.PgcClient
-import io.github.crabzilla.pgc.api.PgcVerticlesClient
-import io.github.crabzilla.stack.EventsPublisherOptions
+import com.example1.infra.PgPoolFactory
+import io.github.crabzilla.stack.deployVerticles
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ShutdownEvent
 import io.micronaut.context.event.StartupEvent
 import io.micronaut.runtime.event.annotation.EventListener
+import io.vertx.core.DeploymentOptions
+import io.vertx.core.Vertx
+import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -20,29 +20,36 @@ class AppEventListener {
     }
 
     @Inject
-    lateinit var pgcClient: PgcClient
+    lateinit var vertx: Vertx
+
+    @Inject
+    lateinit var dbConfig: PgPoolFactory.WriteDbConfig
 
     @EventListener
     internal fun onStartupEvent(event: StartupEvent) {
-        pgcClient.vertx.registerLocalCodec()
-        val c = PgcVerticlesClient(pgcClient)
-        val options1 = EventsPublisherOptions.Builder()
-            .targetEndpoint("users")
-            .build()
-        c.addEventsPublisher("users", options1)
-        c.addEventsProjector("users", UsersEventsProjector)
-//        val options2 = EventsPublisherOptions.Builder()
-//            .targetEndpoint(NatsProjectorVerticle.ENDPOINT)
-//            .build()
-//        c.addEventsPublisher("nats", options2)
-//        c.deployVerticles()
-//            .onSuccess { log.info("Success") }
-//            .onFailure { log.error(it.message, it) }
+        val verticles = listOf(
+            "service:demo5.UsersProjector",
+            "service:demo5.UsersPublisher"
+        )
+        val config = JsonObject().put("db-config", options())
+        val deploymentOptions = DeploymentOptions().setConfig(config)
+           vertx.deployVerticles(verticles, deploymentOptions)
+            .onFailure { log.error(it.message, it) }
+            .onSuccess { log.info("Ok") }
     }
 
     @EventListener
     internal fun onShutdownEvent(event: ShutdownEvent) {
         // TODO pgcClient.close()
+    }
+
+    fun options(): JsonObject {
+        return JsonObject()
+            .put("port", dbConfig.port)
+            .put("host", dbConfig.host)
+            .put("database", dbConfig.database)
+            .put("user", dbConfig.user)
+            .put("password", dbConfig.password)
     }
 
 }

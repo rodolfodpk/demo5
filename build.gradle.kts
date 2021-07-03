@@ -13,7 +13,7 @@ group = "com.example1"
 
 val kotlinVersion = project.properties.get("kotlinVersion")
 val natsStreamingVersion = "2.2.3"
-val vertxVersion = "4.1.0"
+val vertxVersion = "4.1.1"
 val crabzillaVersion = "v0.2.0"
 val kotlinSerializationVersion = "1.2.1"
 
@@ -49,16 +49,16 @@ dependencies {
 
     implementation("io.nats:java-nats-streaming:$natsStreamingVersion")
 
-    implementation("io.github.crabzilla.crabzilla:crabzilla-core:$crabzillaVersion")
-    implementation("io.github.crabzilla.crabzilla:crabzilla-pg-client:$crabzillaVersion")
+//    implementation("io.github.crabzilla.crabzilla:crabzilla-core:$crabzillaVersion")
+//    implementation("io.github.crabzilla.crabzilla:crabzilla-pg-client:$crabzillaVersion")
 
-//    implementation("io.github.crabzilla:crabzilla-core:$crabzillaVersion")
-//    implementation("io.github.crabzilla:crabzilla-pg-client:$crabzillaVersion")
+    implementation("io.github.crabzilla:crabzilla-core:$crabzillaVersion")
+    implementation("io.github.crabzilla:crabzilla-pg-client:$crabzillaVersion")
 
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-core:$vertxVersion")
     implementation("io.vertx:vertx-pg-client:$vertxVersion")
-//    implementation("io.vertx:vertx-cassandra-client:$vertxVersion")
+    implementation("io.vertx:vertx-service-factory:$vertxVersion")
     implementation("io.vertx:vertx-auth-jwt:$vertxVersion")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")

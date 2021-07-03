@@ -15,13 +15,10 @@ class PgPoolFactory {
     fun poolOptions(vertx: Vertx, config: WriteDbConfig): PoolOptions {
         return PoolOptions()
             .setMaxSize(config.maxSize)
-//            .setMaxWaitQueueSize(-1)
-//            .setIdleTimeout(2)
-//            .setIdleTimeoutUnit(TimeUnit.SECONDS)
     }
 
     @Context
-    fun pgConnectOptions(vertx: Vertx, config: WriteDbConfig): PgConnectOptions {
+    fun pgConnectOptions(config: WriteDbConfig): PgConnectOptions {
         return PgConnectOptions()
             .setPort(config.port)
             .setHost(config.host)
@@ -32,6 +29,11 @@ class PgPoolFactory {
             .setReconnectAttempts(2)
             .setReconnectInterval(1000)
     }
+
+//    @Context
+//    fun dbConfig(config: WriteDbConfig): WriteDbConfig {
+//        return config
+//    }
 
     @ConfigurationProperties("vertx.pg.client")
     class WriteDbConfig  {

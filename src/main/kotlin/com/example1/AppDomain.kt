@@ -130,7 +130,7 @@ object UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
 
       is RegisterUser -> {
         if (snapshot == null)
-          with(User.create(id = command.userId,
+          withNew(User.create(id = command.userId,
             name = command.name,
             email = command.email,
             password = command.password),

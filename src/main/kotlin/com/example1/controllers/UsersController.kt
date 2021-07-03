@@ -33,7 +33,7 @@ import javax.inject.Named
 
 @Controller("/api/v1/users")
 @Context
-open class UsersController(@Named("sync") private val controller: CommandController<User, UserCommand, UserEvent>) {
+open class UsersController(@Named("async") private val controller: CommandController<User, UserCommand, UserEvent>) {
 
     companion object {
         private val log = LoggerFactory.getLogger(UsersController::class.java)
