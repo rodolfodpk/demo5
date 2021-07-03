@@ -2,12 +2,12 @@ package com.example1.projections
 
 import com.example1.UserEvent
 import io.github.crabzilla.core.DomainEvent
-import io.github.crabzilla.pgc.PgcEventsProjectorApi
+import io.github.crabzilla.pgc.integration.EventsProjector
 import io.github.crabzilla.stack.EventMetadata
 import io.vertx.core.Future
 import io.vertx.sqlclient.SqlConnection
 
-object UsersEventsProjector: PgcEventsProjectorApi {
+object UsersEventsProjector: EventsProjector {
 
     override fun project(conn: SqlConnection, event: DomainEvent, eventMetadata: EventMetadata): Future<Void> {
         val id = eventMetadata.aggregateRootId.id
