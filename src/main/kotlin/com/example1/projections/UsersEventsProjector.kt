@@ -2,7 +2,7 @@ package com.example1.projections
 
 import com.example1.UserEvent
 import io.github.crabzilla.core.DomainEvent
-import io.github.crabzilla.pgc.integration.EventsProjector
+import io.github.crabzilla.pgc.projector.EventsProjector
 import io.github.crabzilla.stack.EventMetadata
 import io.vertx.core.Future
 import io.vertx.sqlclient.SqlConnection

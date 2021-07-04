@@ -4,8 +4,8 @@ import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Factory
 import io.vertx.core.Vertx
-import io.vertx.core.eventbus.EventBus
 import io.vertx.core.VertxOptions
+import io.vertx.core.eventbus.EventBus
 
 @Factory
 class VertxFactory {

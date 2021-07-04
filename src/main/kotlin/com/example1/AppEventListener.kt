@@ -27,23 +27,29 @@ class AppEventListener {
 
     @EventListener
     internal fun onStartupEvent(event: StartupEvent) {
-        val verticles = listOf(
+        val singletonVerticles = listOf(
             "service:demo5.UsersProjector",
-            "service:demo5.UsersPublisher"
+            "service:demo5.UsersPublisher",
+            "service:demo5.UsersCommandVerticle"
+        )
+        val verticles = listOf(
+            "service:demo5.UsersCommandVerticle"
         )
         val config = JsonObject().put("db-config", options())
         val deploymentOptions = DeploymentOptions().setConfig(config)
-           vertx.deployVerticles(verticles, deploymentOptions)
+        vertx.deployVerticles(verticles, deploymentOptions)
+            .compose { vertx.deployVerticles(singletonVerticles, deploymentOptions) }
             .onFailure { log.error(it.message, it) }
             .onSuccess { log.info("Ok") }
     }
 
     @EventListener
     internal fun onShutdownEvent(event: ShutdownEvent) {
-        // TODO pgcClient.close()
+        vertx.close()
+        // TODO pgPool.close
     }
 
-    fun options(): JsonObject {
+    private fun options(): JsonObject {
         return JsonObject()
             .put("port", dbConfig.port)
             .put("host", dbConfig.host)

@@ -1,5 +1,5 @@
 {
-  "main": "io.github.crabzilla.pgc.integration.EventsPublisherVerticle",
+  "main": "io.github.crabzilla.pgc.publisher.EventsPublisherVerticle",
   "options": {
     "config" : {
       "connectOptionsName": "db-config",

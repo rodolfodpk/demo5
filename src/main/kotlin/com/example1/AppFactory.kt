@@ -2,7 +2,6 @@ package com.example1
 
 import com.example1.projections.UsersEventsProjector
 import io.github.crabzilla.pgc.command.CommandControllerClient
-import io.github.crabzilla.pgc.command.CommandControllerFactory
 import io.github.crabzilla.stack.CommandController
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Value
@@ -41,12 +40,18 @@ private class AppFactory {
     @Singleton
     @Named("sync")
     fun cmdControllerSync(pgcClient: CommandControllerClient): CommandController<User, UserCommand, UserEvent> {
-        return CommandControllerFactory(pgcClient).create(userConfig, false, UsersEventsProjector)
+        return pgcClient.create(userConfig,
+            saveCommandOption = false,
+            optimisticLockOption = false,
+            projectorApi = UsersEventsProjector)
     }
 
     @Singleton
     @Named("async")
     fun cmdControllerAsync(pgcClient: CommandControllerClient): CommandController<User, UserCommand, UserEvent> {
-        return CommandControllerFactory(pgcClient).create(userConfig, false)
+        return pgcClient.create(userConfig,
+            saveCommandOption = false,
+            optimisticLockOption = false,
+            projectorApi = null)
     }
 }

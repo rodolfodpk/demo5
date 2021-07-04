@@ -1,12 +1,12 @@
 {
-  "main": "io.github.crabzilla.pgc.integration.EventsProjectorVerticle",
+  "main": "io.github.crabzilla.pgc.projector.EventsProjectorVerticle",
   "options": {
     "config" : {
       "connectOptionsName": "db-config",
       "poolOptions": {
         "maxSize": 7
       },
-      "jsonFactoryClassName": "com.example1.AppJsonFactory",
+      "jsonFactoryClassName": "com.example1.AppJsonContextFactory",
       "eventsProjectorFactoryClassName": "com.example1.projections.UsersProjectorFactory",
       "targetEndpoint" : "users-projection"
     },

@@ -1,0 +1,13 @@
+{
+  "main": "com.example1.UsersCommandVerticle",
+  "options": {
+    "config" : {
+      "connectOptionsName": "db-config",
+      "poolOptions": {
+        "maxSize": 7
+      }
+    },
+    "worker": false,
+    "instances": 1
+  }
+}
