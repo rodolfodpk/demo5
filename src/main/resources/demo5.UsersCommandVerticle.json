@@ -8,6 +8,6 @@
       }
     },
     "worker": false,
-    "instances": 1
+    "instances": 4
   }
 }

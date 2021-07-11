@@ -2,7 +2,7 @@ package com.example1
 
 import com.example1.projections.UsersEventsProjector
 import io.github.crabzilla.pgc.command.CommandControllerClient
-import io.github.crabzilla.stack.CommandController
+import io.github.crabzilla.stack.command.CommandController
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Value
 import io.vertx.core.Vertx

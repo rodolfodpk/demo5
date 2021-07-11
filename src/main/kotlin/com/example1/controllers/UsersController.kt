@@ -5,13 +5,15 @@ import com.example1.UserAlreadyExists
 import com.example1.UserCommand
 import com.example1.UserCommand.RegisterUser
 import com.example1.UserEvent
+import com.example1.UsersCommandVerticle
+import com.example1.userJson
 import com.github.f4b6a3.uuid.UuidCreator
 import io.github.crabzilla.core.StatefulSession
-import io.github.crabzilla.stack.AggregateRootId
-import io.github.crabzilla.stack.CommandController
-import io.github.crabzilla.stack.CommandException
 import io.github.crabzilla.stack.CommandId
-import io.github.crabzilla.stack.CommandMetadata
+import io.github.crabzilla.stack.DomainStateId
+import io.github.crabzilla.stack.command.CommandController
+import io.github.crabzilla.stack.command.CommandException
+import io.github.crabzilla.stack.command.CommandMetadata
 import io.micronaut.context.annotation.Context
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.HttpResponse
@@ -23,6 +25,7 @@ import io.micronaut.http.annotation.Status
 import io.micronaut.http.exceptions.HttpStatusException
 import io.reactivex.Single
 import io.vertx.core.eventbus.EventBus
+import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 import javax.inject.Named
 import javax.validation.Valid
@@ -46,7 +49,7 @@ open class UsersController(
     @Post
     open fun post(@Valid @Body request: CreateUserRequest): Single<HttpResponse<String>> {
         val newId = UuidCreator.getTimeOrdered()
-        val metadata = CommandMetadata(AggregateRootId(newId), CommandId(UuidCreator.getTimeOrdered()))
+        val metadata = CommandMetadata(DomainStateId(newId), CommandId(UuidCreator.getTimeOrdered()))
         val command = RegisterUser(newId, request.name, request.email, request.password)
         return Single.create { emitter ->
 

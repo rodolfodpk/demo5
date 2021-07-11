@@ -10,7 +10,7 @@ import io.vertx.sqlclient.SqlConnection
 object UsersEventsProjector: EventsProjector {
 
     override fun project(conn: SqlConnection, event: DomainEvent, eventMetadata: EventMetadata): Future<Void> {
-        val id = eventMetadata.aggregateRootId.id
+        val id = eventMetadata.domainStateId.id
         return when (val e = event as UserEvent) {
             is UserEvent.UserRegistered ->
                 UsersWriteRepository.upsert(conn, id, e.name, e.email, e.password)

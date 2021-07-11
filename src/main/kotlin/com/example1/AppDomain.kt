@@ -6,17 +6,17 @@ import com.example1.UserCommand.RegisterUser
 import com.example1.UserEvent.UserActivated
 import com.example1.UserEvent.UserDeactivated
 import com.example1.UserEvent.UserRegistered
-import io.github.crabzilla.core.AggregateRoot
 import io.github.crabzilla.core.Command
+import io.github.crabzilla.core.CommandControllerConfig
 import io.github.crabzilla.core.CommandHandler
-import io.github.crabzilla.core.CommandHandler.ConstructorResult
+import io.github.crabzilla.core.CommandHandlerApi.*
 import io.github.crabzilla.core.CommandValidator
 import io.github.crabzilla.core.DomainEvent
+import io.github.crabzilla.core.DomainState
 import io.github.crabzilla.core.EventHandler
 import io.github.crabzilla.core.Snapshot
 import io.github.crabzilla.core.StatefulSession
 import io.github.crabzilla.core.javaModule
-import io.github.crabzilla.stack.AggregateRootConfig
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -69,13 +69,13 @@ sealed class UserCommand : Command() {
 @Serializable
 @SerialName("User")
 data class User(@Contextual val id: UUID, val name: String, val email: String, val password: String,
-                val isActive: Boolean = true, val reason: String? = null) : AggregateRoot() {
+                val isActive: Boolean = true, val reason: String? = null) : DomainState() {
 
   companion object {
     fun create(id: UUID, name: String, email: String, password: String): ConstructorResult<User, UserEvent> {
-      return ConstructorResult( state = User(id = id, name = name, email = email, password = password),
-                                events = arrayOf(UserRegistered(id = id, name = name, email = email,
-                                  password = password)))
+      return ConstructorResult(state = User(id = id, name = name, email = email, password = password),
+        events = arrayOf(UserRegistered(id = id, name = name, email = email,
+          password = password)))
     }
   }
 
@@ -122,15 +122,17 @@ object UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
 
   override fun handleCommand(
     command: UserCommand,
-    snapshot: Snapshot<User>?,
-    eventHandler: EventHandler<User, UserEvent>)
+    eventHandler: EventHandler<User, UserEvent>,
+    snapshot: Snapshot<User>?
+    )
   : StatefulSession<User, UserEvent> {
 
     return when (command) {
 
       is RegisterUser -> {
         if (snapshot == null)
-          withNew(User.create(id = command.userId,
+          withNew(User.create(
+            id = command.userId,
             name = command.name,
             email = command.email,
             password = command.password),
@@ -146,12 +148,12 @@ object UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
   }
 }
 
-val userConfig = AggregateRootConfig(
+val userConfig = CommandControllerConfig(
   "User",
   userEventHandler,
-  userCmdValidator,
-  UserCommandHandler
-)
+  UserCommandHandler,
+  userCmdValidator
+  )
 
 /**
  * kotlinx.serialization
@@ -159,7 +161,7 @@ val userConfig = AggregateRootConfig(
 @kotlinx.serialization.ExperimentalSerializationApi
 val userModule = SerializersModule {
   include(javaModule)
-  polymorphic(AggregateRoot::class) {
+  polymorphic(DomainState::class) {
     subclass(User::class, User.serializer())
   }
   polymorphic(Command::class) {

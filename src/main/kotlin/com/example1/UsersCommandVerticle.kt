@@ -4,8 +4,8 @@ import io.github.crabzilla.core.Command
 import io.github.crabzilla.pgc.PgcAbstractVerticle
 import io.github.crabzilla.pgc.command.PgcEventStore
 import io.github.crabzilla.pgc.command.PgcSnapshotRepo
-import io.github.crabzilla.stack.CommandController
-import io.github.crabzilla.stack.CommandMetadata
+import io.github.crabzilla.stack.command.CommandController
+import io.github.crabzilla.stack.command.CommandMetadata
 import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 
@@ -23,8 +23,11 @@ class UsersCommandVerticle : PgcAbstractVerticle() {
     val sqlClient = sqlClient(config())
 
     val snapshotRepo = PgcSnapshotRepo<User>(sqlClient, userJson)
-    val eventStore = PgcEventStore(userConfig, pgPool, userJson, false)
-    val controller = CommandController(userConfig, snapshotRepo, eventStore)
+    val eventStore = PgcEventStore(userConfig, pgPool, userJson,
+      saveCommandOption = false,
+      optimisticLockOption = false,
+      eventsProjectorApi = null)
+    val controller = CommandController(userConfig, snapshotRepo, eventStore, vertx.eventBus())
 
     vertx.eventBus().consumer<JsonObject>(ENDPOINT) { msg ->
       val metadata = CommandMetadata.fromJson(msg.body().getJsonObject("metadata"))
