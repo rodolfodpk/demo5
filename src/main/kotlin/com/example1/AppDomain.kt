@@ -7,9 +7,8 @@ import com.example1.UserEvent.UserActivated
 import com.example1.UserEvent.UserDeactivated
 import com.example1.UserEvent.UserRegistered
 import io.github.crabzilla.core.Command
-import io.github.crabzilla.core.CommandControllerConfig
 import io.github.crabzilla.core.CommandHandler
-import io.github.crabzilla.core.CommandHandlerApi.*
+import io.github.crabzilla.core.CommandHandlerApi.ConstructorResult
 import io.github.crabzilla.core.CommandValidator
 import io.github.crabzilla.core.DomainEvent
 import io.github.crabzilla.core.DomainState
@@ -118,7 +117,7 @@ class UserAlreadyExists(id: UUID) : IllegalStateException("User $id already exis
 /**
  * User command handler
  */
-object UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
+class UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
 
   override fun handleCommand(
     command: UserCommand,
@@ -147,13 +146,6 @@ object UserCommandHandler : CommandHandler<User, UserCommand, UserEvent> {
     }
   }
 }
-
-val userConfig = CommandControllerConfig(
-  "User",
-  userEventHandler,
-  UserCommandHandler,
-  userCmdValidator
-  )
 
 /**
  * kotlinx.serialization

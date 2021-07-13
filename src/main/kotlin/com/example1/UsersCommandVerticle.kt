@@ -1,6 +1,7 @@
 package com.example1
 
 import io.github.crabzilla.core.Command
+import io.github.crabzilla.core.CommandControllerConfig
 import io.github.crabzilla.pgc.PgcAbstractVerticle
 import io.github.crabzilla.pgc.command.PgcEventStore
 import io.github.crabzilla.pgc.command.PgcSnapshotRepo
@@ -22,12 +23,19 @@ class UsersCommandVerticle : PgcAbstractVerticle() {
     val pgPool = pgPool(config())
     val sqlClient = sqlClient(config())
 
+    val userConfig = CommandControllerConfig(
+      "User",
+      userEventHandler,
+      { UserCommandHandler() } ,
+      userCmdValidator
+    )
+
     val snapshotRepo = PgcSnapshotRepo<User>(sqlClient, userJson)
     val eventStore = PgcEventStore(userConfig, pgPool, userJson,
       saveCommandOption = false,
       optimisticLockOption = false,
-      eventsProjectorApi = null)
-    val controller = CommandController(userConfig, snapshotRepo, eventStore, vertx.eventBus())
+      eventsProjector = null)
+    val controller = CommandController(userConfig, snapshotRepo, eventStore)
 
     vertx.eventBus().consumer<JsonObject>(ENDPOINT) { msg ->
       val metadata = CommandMetadata.fromJson(msg.body().getJsonObject("metadata"))

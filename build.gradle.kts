@@ -14,7 +14,7 @@ group = "com.example1"
 val kotlinVersion = project.properties.get("kotlinVersion")
 val natsStreamingVersion = "2.2.3"
 val vertxVersion = "4.1.1"
-val crabzillaVersion = "v0.2.3"
+val crabzillaVersion = "v0.2.4"
 val kotlinSerializationVersion = "1.2.1"
 
 repositories {

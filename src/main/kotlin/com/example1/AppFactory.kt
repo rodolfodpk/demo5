@@ -1,6 +1,7 @@
 package com.example1
 
 import com.example1.projections.UsersEventsProjector
+import io.github.crabzilla.core.CommandControllerConfig
 import io.github.crabzilla.pgc.command.CommandControllerClient
 import io.github.crabzilla.stack.command.CommandController
 import io.micronaut.context.annotation.Factory
@@ -38,20 +39,34 @@ private class AppFactory {
     }
 
     @Singleton
+    fun userConfig(vertx: Vertx): CommandControllerConfig<User, UserCommand, UserEvent> {
+        return CommandControllerConfig(
+            "User",
+            userEventHandler,
+            { UserCommandHandler() } ,
+            userCmdValidator
+        )
+    }
+
+    @Singleton
     @Named("sync")
-    fun cmdControllerSync(pgcClient: CommandControllerClient): CommandController<User, UserCommand, UserEvent> {
+    fun cmdControllerSync(pgcClient: CommandControllerClient,
+                          userConfig: CommandControllerConfig<User, UserCommand, UserEvent>)
+    : CommandController<User, UserCommand, UserEvent> {
         return pgcClient.create(userConfig,
             saveCommandOption = false,
             optimisticLockOption = false,
-            projectorApi = UsersEventsProjector)
+            eventsProjector = UsersEventsProjector)
     }
 
     @Singleton
     @Named("async")
-    fun cmdControllerAsync(pgcClient: CommandControllerClient): CommandController<User, UserCommand, UserEvent> {
+    fun cmdControllerAsync(pgcClient: CommandControllerClient,
+                           userConfig: CommandControllerConfig<User, UserCommand, UserEvent>)
+    : CommandController<User, UserCommand, UserEvent> {
         return pgcClient.create(userConfig,
             saveCommandOption = false,
             optimisticLockOption = false,
-            projectorApi = null)
+            eventsProjector = null)
     }
 }

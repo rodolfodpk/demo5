@@ -27,19 +27,20 @@ class AppEventListener {
 
     @EventListener
     internal fun onStartupEvent(event: StartupEvent) {
+
         val singletonVerticles = listOf<String>(
-//            "service:demo5.UsersProjector",
-//            "service:demo5.UsersPublisher"
+            "service:demo5.UsersProjector",
+            "service:demo5.UsersPublisher"
         )
         val verticles = listOf(
             "service:demo5.UsersCommandVerticle"
         )
         val config = JsonObject().put("db-config", options())
         val deploymentOptions = DeploymentOptions().setConfig(config)
-        vertx.deployVerticles(verticles, deploymentOptions)
-            .compose { vertx.deployVerticles(singletonVerticles, deploymentOptions) }
-            .onFailure { log.error(it.message, it) }
-            .onSuccess { log.info("Ok") }
+//        vertx.deployVerticles(verticles, deploymentOptions)
+//            .compose { vertx.deployVerticles(singletonVerticles, deploymentOptions) }
+//            .onFailure { log.error(it.message, it) }
+//            .onSuccess { log.info("Ok") }
     }
 
     @EventListener
