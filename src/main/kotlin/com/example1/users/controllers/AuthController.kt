@@ -1,4 +1,4 @@
-package com.example1.controllers
+package com.example1.users.controllers
 
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpResponse

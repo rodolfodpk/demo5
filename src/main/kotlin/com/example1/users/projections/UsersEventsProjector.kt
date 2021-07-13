@@ -1,6 +1,6 @@
-package com.example1.projections
+package com.example1.users.projections
 
-import com.example1.UserEvent
+import com.example1.users.UserEvent
 import io.github.crabzilla.core.DomainEvent
 import io.github.crabzilla.pgc.projector.EventsProjector
 import io.github.crabzilla.stack.EventMetadata

@@ -1,4 +1,4 @@
-package com.example1
+package com.example1.users
 
 import io.github.crabzilla.core.Command
 import io.github.crabzilla.core.CommandControllerConfig

@@ -1,6 +1,13 @@
 package com.example1
 
-import com.example1.projections.UsersEventsProjector
+import com.example1.users.User
+import com.example1.users.UserCommand
+import com.example1.users.UserCommandHandler
+import com.example1.users.UserEvent
+import com.example1.users.projections.UsersEventsProjector
+import com.example1.users.userCmdValidator
+import com.example1.users.userEventHandler
+import com.example1.users.userJson
 import io.github.crabzilla.core.CommandControllerConfig
 import io.github.crabzilla.pgc.command.CommandControllerClient
 import io.github.crabzilla.stack.command.CommandController

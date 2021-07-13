@@ -1,10 +1,10 @@
-package com.example1.controllers
+package com.example1.users.controllers
 
-import com.example1.User
-import com.example1.UserAlreadyExists
-import com.example1.UserCommand
-import com.example1.UserCommand.RegisterUser
-import com.example1.UserEvent
+import com.example1.users.User
+import com.example1.users.UserAlreadyExists
+import com.example1.users.UserCommand
+import com.example1.users.UserCommand.RegisterUser
+import com.example1.users.UserEvent
 import com.github.f4b6a3.uuid.UuidCreator
 import io.github.crabzilla.core.CommandException
 import io.github.crabzilla.core.StatefulSession

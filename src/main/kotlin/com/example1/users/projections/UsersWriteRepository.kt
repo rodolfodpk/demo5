@@ -1,4 +1,4 @@
-package com.example1.projections
+package com.example1.users.projections
 
 import io.vertx.core.Future
 import io.vertx.sqlclient.SqlConnection

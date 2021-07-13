@@ -1,11 +1,11 @@
-package com.example1
+package com.example1.users
 
-import com.example1.UserCommand.ActivateUser
-import com.example1.UserCommand.DeactivateUser
-import com.example1.UserCommand.RegisterUser
-import com.example1.UserEvent.UserActivated
-import com.example1.UserEvent.UserDeactivated
-import com.example1.UserEvent.UserRegistered
+import com.example1.users.UserCommand.ActivateUser
+import com.example1.users.UserCommand.DeactivateUser
+import com.example1.users.UserCommand.RegisterUser
+import com.example1.users.UserEvent.UserActivated
+import com.example1.users.UserEvent.UserDeactivated
+import com.example1.users.UserEvent.UserRegistered
 import io.github.crabzilla.core.Command
 import io.github.crabzilla.core.CommandHandler
 import io.github.crabzilla.core.CommandHandlerApi.ConstructorResult
