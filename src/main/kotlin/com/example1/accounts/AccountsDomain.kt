@@ -54,7 +54,7 @@ sealed class AccountEvent : DomainEvent() {
 sealed class AccountCommand : Command() {
   @Serializable
   @SerialName("OpenAccount")
-  data class OpenAccount(@Contextual val id: UUID)
+  data class OpenAccount(@Contextual val id: UUID, val bonusCredit: Double?)
     : AccountCommand()
 
   @Serializable
@@ -83,8 +83,8 @@ data class Account(@Contextual val id: UUID,
     /**
      * Open an account giving a bonus credit
      */
-    fun open(id: UUID, bonusCredit: Double): ConstructorResult<Account, AccountEvent> {
-      return if (bonusCredit == 0.00) {
+    fun open(id: UUID, bonusCredit: Double?): ConstructorResult<Account, AccountEvent> {
+      return if (bonusCredit == null || bonusCredit == 0.00) {
         ConstructorResult(
           state = Account(id = id),
           events = arrayOf(
@@ -170,7 +170,7 @@ class AccountCommandHandler : CommandHandler<Account, AccountCommand, AccountEve
     return when (command) {
       is OpenAccount -> {
         if (snapshot == null)
-          withNew(Account.open(command.id, bonusCredit = 0.00), acctEventHandler)
+          withNew(Account.open(command.id, bonusCredit = command.bonusCredit), acctEventHandler)
         else throw AccountAlreadyExists(command.id)
       }
       is DepositMoney -> with(snapshot!!, acctEventHandler).execute { it.deposit(command.amount) }
