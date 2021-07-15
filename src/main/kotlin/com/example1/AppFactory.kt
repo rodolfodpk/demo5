@@ -19,6 +19,7 @@ import io.vertx.ext.auth.jwt.JWTAuth
 import io.vertx.ext.auth.jwt.JWTAuthOptions
 import io.vertx.pgclient.PgConnectOptions
 import io.vertx.pgclient.PgPool
+import io.vertx.pgclient.SslMode
 import io.vertx.sqlclient.PoolOptions
 import javax.inject.Named
 import javax.inject.Singleton
@@ -37,6 +38,14 @@ private class AppFactory {
     @Singleton
     fun pgcClient(vertx: Vertx, connectOptions: PgConnectOptions, poolOptions: PoolOptions)
     : CommandControllerClient {
+//        val co = PgConnectOptions() // TODO to use cockroach
+//            .setPort(26257)
+//            .setHost("0.0.0.0")
+//            .setDatabase("test")
+//            .setUser("root")
+//            .setPassword("admin")
+//            .setSsl(false)
+//            .setSslMode(SslMode.DISABLE)
         return CommandControllerClient.create(vertx, userJson, connectOptions, poolOptions)
     }
 
